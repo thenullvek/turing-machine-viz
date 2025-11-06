@@ -122,6 +122,14 @@ function TMViz(div, spec, posTable) {
     }
   });
 
+  // Property to get current execution count
+  var execution_count = 0;
+  Object.defineProperty(this, 'executionSteps', {
+    configurable: true,
+    get: function () { return execution_count; },
+    set: function(value) { execution_count = value; }
+  });
+
   this.__parentDiv = div;
   this.__spec = spec;
 }
@@ -133,8 +141,8 @@ TMViz.prototype.step = function () {
   if (!this.machine.step()) {
     this.isRunning = false;
     this.isHalted = true;
-    //console.log("Execution Steps: ", this.machine.execution_count);
   }
+  this.executionSteps = this.machine.execution_count;
 };
 
 /**
@@ -147,6 +155,7 @@ TMViz.prototype.reset = function () {
   this.machine.tape.domNode.remove();
   this.machine.tape = addTape(this.__parentDiv, this.__spec);
   this.machine.execution_count = 0;
+  this.executionSteps = 0;
 };
 
 Object.defineProperty(TMViz.prototype, 'positionTable', {

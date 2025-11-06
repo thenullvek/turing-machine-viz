@@ -112,15 +112,20 @@ TMSimulator.prototype.htmlForRunButton =
   '<span class="glyphicon glyphicon-play" aria-hidden="true"></span><br>Run';
 TMSimulator.prototype.htmlForPauseButton =
   '<span class="glyphicon glyphicon-pause" aria-hidden="true"></span><br>Pause';
+TMSimulator.prototype.htmlForStepButton =
+  '<span class="glyphicon glyphicon-step-forward" aria-hidden="true"></span><br>Step'
 
 // bind: .disabled for Step and Run, and .innerHTML (Run/Pause) for Run
-function rebindStepRun(stepButton, runButton, runHTML, pauseHTML, machine) {
+function rebindStepRun(stepButton, runButton, runHTML, pauseHTML, stepHTML, machine) {
   function onHaltedChange(isHalted) {
     stepButton.disabled = isHalted;
     runButton.disabled = isHalted;
   }
   function onRunningChange(isRunning) {
     runButton.innerHTML = isRunning ? pauseHTML : runHTML;
+  }
+  function onExecutionStepsChange(nsteps) {
+    stepButton.innerHTML = stepHTML + " (" + nsteps + ")";
   }
   watchInit(machine, 'isHalted', function (prop, oldval, isHalted) {
     onHaltedChange(isHalted);
@@ -130,6 +135,10 @@ function rebindStepRun(stepButton, runButton, runHTML, pauseHTML, machine) {
     onRunningChange(isRunning);
     return isRunning;
   });
+  watchInit(machine, 'executionSteps', function (prop, oldval, newval) {
+    onExecutionStepsChange(newval);
+    return newval;
+  });
 }
 
 // internal method.
@@ -138,7 +147,7 @@ TMSimulator.prototype.rebindButtons = function () {
   var enable = (this.machine != null);
   if (enable) {
     rebindStepRun(buttons.step, buttons.run,
-      this.htmlForRunButton, this.htmlForPauseButton, this.machine);
+      this.htmlForRunButton, this.htmlForPauseButton, this.htmlForStepButton, this.machine);
   }
   buttons.all.forEach(function (b) { b.disabled = !enable; });
 };
