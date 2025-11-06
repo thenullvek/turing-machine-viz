@@ -247,6 +247,7 @@ function parseInstructionObject(val) {
     state = val.R;
   } else if ('N' in val) {
     move = TM.MoveHead.halt;
+    state = val.N;
   } else {
     throw new TMSpecError('Missing movement direction');
   }
