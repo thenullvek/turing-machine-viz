@@ -17,7 +17,7 @@ fi
 
 # Checkout gh-pages branch into temporary ./gh-pages/
 mkdir gh-pages || { >&2 echo './gh-pages already exists. Operation cancelled.'; exit 1; }
-git --work-tree=./gh-pages checkout gh-pages 1>/dev/null # suppress spurious diff
+git --work-tree=./gh-pages checkout gh-page 1>/dev/null # suppress spurious diff
 function restore() { rm -r ./gh-pages; git checkout -f "$PREV_BRANCH"; }
 trap restore EXIT
 
