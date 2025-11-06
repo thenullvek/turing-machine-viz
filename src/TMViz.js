@@ -133,7 +133,7 @@ TMViz.prototype.step = function () {
   if (!this.machine.step()) {
     this.isRunning = false;
     this.isHalted = true;
-    console.log("Execution Steps: ", this.machine.execution_count);
+    //console.log("Execution Steps: ", this.machine.execution_count);
   }
 };
 
