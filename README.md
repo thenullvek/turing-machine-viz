@@ -1,4 +1,4 @@
-# [turingmachine.io](http://turingmachine.io)
+# [turingmachine.io](http://tmviz.nullvek.com)
 
 This is a [Turing machine] visualizer designed for learning through visual thinking and creative exploration.
 

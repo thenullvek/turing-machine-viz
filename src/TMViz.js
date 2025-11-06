@@ -133,6 +133,7 @@ TMViz.prototype.step = function () {
   if (!this.machine.step()) {
     this.isRunning = false;
     this.isHalted = true;
+    console.log("Execution Steps: ", this.machine.execution_count);
   }
 };
 
@@ -145,6 +146,7 @@ TMViz.prototype.reset = function () {
   this.machine.state = this.__spec.startState;
   this.machine.tape.domNode.remove();
   this.machine.tape = addTape(this.__parentDiv, this.__spec);
+  this.machine.execution_count = 0;
 };
 
 Object.defineProperty(TMViz.prototype, 'positionTable', {

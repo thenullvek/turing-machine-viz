@@ -197,6 +197,7 @@ function parseInstruction(synonyms, table, val) {
 
 var moveLeft = Object.freeze({move: TM.MoveHead.left});
 var moveRight = Object.freeze({move: TM.MoveHead.right});
+var moveHalt = Object.freeze({move: TM.MoveHead.halt});
 
 // case: direction or synonym
 function parseInstructionString(synonyms, val) {
@@ -204,6 +205,8 @@ function parseInstructionString(synonyms, val) {
     return moveLeft;
   } else if (val === 'R') {
     return moveRight;
+  } else if (val === 'N') {
+    return moveHalt;
   }
   // note: this order prevents overriding L/R in synonyms, as that would
   // allow inconsistent notation, e.g. 'R' and {R: ..} being different.
@@ -223,25 +226,27 @@ function parseInstructionObject(val) {
     var badKey;
     if (!Object.keys(val).every(function (key) {
       badKey = key;
-      return key === 'L' || key === 'R' || key === 'write';
+      return key === 'L' || key === 'R' || key === 'N' || key === 'write';
     })) {
       throw new TMSpecError('Unrecognized key',
       {problemValue: badKey,
-      info: 'An instruction always has a tape movement <code>L</code> or <code>R</code>, '
+      info: 'An instruction always has a tape movement <code>L</code>, <code>R</code> or <code>N</code> '
         + 'and optionally can <code>write</code> a symbol'});
     }
   })();
   // one L/R key is required, with optional state value
-  if ('L' in val && 'R' in val) {
-    throw new TMSpecError('Conflicting tape movements',
-    {info: 'Each instruction needs exactly one movement direction, but two were found'});
-  }
+  //if ('L' in val && 'R' in val && 'N' in val) {
+  //  throw new TMSpecError('Conflicting tape movements',
+  //    {info: 'Each instruction needs exactly one movement direction, but two were found'});
+  //}
   if ('L' in val) {
     move = TM.MoveHead.left;
     state = val.L;
   } else if ('R' in val) {
     move = TM.MoveHead.right;
     state = val.R;
+  } else if ('N' in val) {
+    move = TM.MoveHead.halt;
   } else {
     throw new TMSpecError('Missing movement direction');
   }

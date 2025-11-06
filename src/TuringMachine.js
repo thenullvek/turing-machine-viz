@@ -13,6 +13,7 @@ function TuringMachine(transition, startState, tape) {
   this.transition = transition;
   this.state = startState;
   this.tape = tape;
+  this.execution_count = 0;
 }
 
 TuringMachine.prototype.toString = function () {
@@ -31,6 +32,7 @@ TuringMachine.prototype.step = function () {
   this.tape.write(instruct.symbol);
   move(this.tape, instruct.move);
   this.state = instruct.state;
+  this.execution_count++;
 
   return true;
 };
@@ -51,12 +53,14 @@ function move(tape, direction) {
   switch (direction) {
     case MoveHead.right: tape.headRight(); break;
     case MoveHead.left:  tape.headLeft();  break;
+    case MoveHead.halt:  break;
     default: throw new TypeError('not a valid tape movement: ' + String(direction));
   }
 }
 var MoveHead = Object.freeze({
   left:  {toString: function () { return 'L'; } },
-  right: {toString: function () { return 'R'; } }
+  right: {toString: function () { return 'R'; } },
+  halt:  {toString: function () { return 'N'; } }
 });
 var MoveTape = Object.freeze({left: MoveHead.right, right: MoveHead.left});
 
